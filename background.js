@@ -1,14 +1,22 @@
-/*
-Open a new tab, and load "my-page.html" into it.
-*/
-function openTidalPage() {
-    console.log("injecting");
-    browser.tabs.create({
-        "url": "https://listen.tidal.com"
-    });
+function onCreated(windowInfo) {
+    console.log(`Created window: ${windowInfo.id}`);
 }
   
-/*
-Add openMyPage() as a listener to clicks on the browser action.
-*/
+function onError(error) {
+    console.log(`Error: ${error}`);
+}
+
+function openTidalPage() {
+    var popupURL = browser.extension.getURL("https://listen.tidal.com");
+    
+    var creating = browser.windows.create({
+        url: popupURL,
+        type: "popup",
+        height: 1000,
+        width: 1280,
+        left: 640
+    });
+    creating.then(onCreated, onError);
+}
+
 browser.browserAction.onClicked.addListener(openTidalPage);
